@@ -9,7 +9,6 @@ class _HomeState extends State<Home> {
   Map data = {};
   @override
   Widget build(BuildContext context) {
-
     data = ModalRoute.of(context).settings.arguments;
     String bgImage = data['isDayTime'] ? 'day.jpeg' : 'night.jpg';
     Color backgroundColor = data['isDayTime'] ? Colors.cyan[500]: Colors.indigo[900];
@@ -31,7 +30,7 @@ class _HomeState extends State<Home> {
               children: <Widget>[
                 FlatButton.icon(
                     onPressed: (){
-                        Navigator.pushNamed(context, '/');
+                        Navigator.pop(context);
                     },
                     icon: Icon(
                         Icons.edit_location,

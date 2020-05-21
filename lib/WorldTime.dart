@@ -9,9 +9,9 @@ class WorldTime extends StatelessWidget {
       title: 'World time app',
       initialRoute: '/location',
       routes: {
-         '/'        : (context) => Loading(),
+        '/location' : (context) => ChooseLocation(),
+        '/loading'        : (context) => Loading(),
         '/home'     : (context) => Home(),
-        '/location' : (context) => ChooseLocation()
       },
     );
   }
