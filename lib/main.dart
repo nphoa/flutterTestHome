@@ -4,11 +4,13 @@ import 'Model/Email.dart';
 import 'WorldTime.dart';
 import './mobx.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'TodoApp.dart';
+import 'mobxV2.dart';
 
 
 void main() {
 
-  runApp(FlutterMobxApp(title: 'Manage State By Redux'));
+  runApp(TodoApp());
 }
 
 class FlutterMobxApp extends StatelessWidget {
@@ -16,7 +18,7 @@ class FlutterMobxApp extends StatelessWidget {
   FlutterMobxApp({Key key,this.title}):super(key:key);
   @override
   Widget build(BuildContext context) {
-    final counter = Counter();
+    final contact = Contact();
     return MaterialApp(
       //theme: ThemeData.dark(),
       title: title,
@@ -31,7 +33,7 @@ class FlutterMobxApp extends StatelessWidget {
               Observer(
                 builder: (_){
                   return Text(
-                    '${counter.observable.value}',
+                    '${contact.fullName}',
                     style: const TextStyle(fontSize: 20),
                   );
                 },
@@ -41,7 +43,7 @@ class FlutterMobxApp extends StatelessWidget {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: (){
-            counter.increment();
+              contact.addName('nguyen', 'hoa');
           },
           child: Text('click'),
       ),

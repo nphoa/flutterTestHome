@@ -1,14 +1,21 @@
 import 'package:mobx/mobx.dart';
 
 part 'mobxV2.g.dart';
-class CounterV2 = CounterBase with _$CounterV2;
-abstract class CounterBase with Store{
+class Contact = ContactBase with _$Contact;
+abstract class ContactBase with Store{
 
   @observable
-  int value = 0;
+  String firstName;
+
+  @observable
+  String lastName;
+
+  @computed
+  String get fullName => '$firstName,$lastName';
 
   @action
-  void increment(){
-    value++;
+  void addName(String firstName,String lastName){
+      this.firstName = firstName;
+      this.lastName = lastName;
   }
 }

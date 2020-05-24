@@ -59,6 +59,8 @@ flutter:
     - assets/south_korea.png
     - assets/uk.jpg
     - assets/usa.png
+    - assets/todo.jpg
+    - assets/todo2.jpg
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
