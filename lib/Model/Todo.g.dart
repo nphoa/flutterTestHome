@@ -57,13 +57,13 @@ mixin _$Todo on TodoBase, Store {
   final _$doneAtom = Atom(name: 'TodoBase.done');
 
   @override
-  bool get done {
+  int get done {
     _$doneAtom.reportRead();
     return super.done;
   }
 
   @override
-  set done(bool value) {
+  set done(int value) {
     _$doneAtom.reportWrite(value, super.done, () {
       super.done = value;
     });

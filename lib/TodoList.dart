@@ -1,6 +1,6 @@
 import 'package:flutterapp2/Model/Todo.dart';
+import 'package:flutterapp2/db/todo_table.dart';
 import 'package:mobx/mobx.dart';
-
 part 'TodoList.g.dart';
 
 enum VisibilityFilter { all, pending, completed }
@@ -12,7 +12,7 @@ abstract class TodoListBase with Store{
   }
 
   @observable
-  ObservableList<Todo> todos = ObservableList<Todo>();
+  List<Todo> todos = List<Todo>();
 
   @observable
   VisibilityFilter filter = VisibilityFilter.all;
@@ -21,12 +21,12 @@ abstract class TodoListBase with Store{
   String currentDescription = '';
   
   @computed
-  ObservableList<Todo> get pendingTodos =>
-        ObservableList.of(todos.where((element) => element.done != true));
+  List<Todo> get pendingTodos =>
+        todos.where((element) => element.done == 0).toList();
 
   @computed
-  ObservableList<Todo> get completedTodos =>
-      ObservableList.of(todos.where((element) => element.done == true));
+  List<Todo> get completedTodos =>
+      (todos.where((element) => element.done == 1)).toList();
 
   @computed
   bool get hasPendingTodos => pendingTodos.isNotEmpty;
@@ -35,7 +35,7 @@ abstract class TodoListBase with Store{
   bool get hasCompletedTodos => completedTodos.isNotEmpty;
 
   @computed
-  ObservableList<Todo> get visibleTodos {
+  List<Todo> get visibleTodos {
     switch(filter){
       case VisibilityFilter.pending:
            return pendingTodos;
@@ -46,11 +46,26 @@ abstract class TodoListBase with Store{
     }
   }
 
+  @computed
+  String get filterName {
+    switch(filter){
+      case VisibilityFilter.pending:
+        return 'Pending';
+      case VisibilityFilter.completed:
+        return 'Completed';
+      default:
+        return 'All';
+    }
+  }
+
   @action
   void addTodo(Todo instance){
     if(instance.id == 0){
       instance.id = findIdFinal() + 1;
-      todos.add(instance);
+      //todos.add(instance);
+      TodoTable tb = TodoTable();
+      tb.insertTodo(instance);
+      initTodo();
       return;
     }
     Todo instanceUpdate = findTodo(instance.id);
@@ -60,14 +75,19 @@ abstract class TodoListBase with Store{
   }
 
   @action
-  void deleteTodo(int index){
-      todos.removeAt(index);
+  void deleteTodo(Todo instance){
+    TodoTable tb = TodoTable();
+    tb.deleteTodo(instance);
+    initTodo();
   }
 
   @action
-  void initTodo(){
-    todos.add(Todo(id: 1, title:'Learning',description: 'Learning Mobx'));
-    todos.add(Todo(id:2,title:'Learning',description: 'Learning Flutter'));
+  Future<void> initTodo() async{
+    //todos.add(Todo(id: 1, title:'Learning',description: 'Learning Mobx'));
+    //todos.add(Todo(id:2,title:'Learning',description: 'Learning Flutter'));
+    TodoTable tb = TodoTable();
+    todos = await tb.getAllTodo(0);
+    print(todos);
   }
   
   @action
@@ -83,10 +103,15 @@ abstract class TodoListBase with Store{
   }
 
   @action
-  void changeStatus(Todo instance){
-    Todo instanceUpdate = findTodo(instance.id);
-    instanceUpdate.done = !instance.done;
-    print(instanceUpdate);
+  Future<void> changeStatus(Todo instance) async{
+    //Todo instanceUpdate = findTodo(instance.id);
+    TodoTable tb = TodoTable();
+    var instanceUpdate =await tb.getAllTodo(instance.id);
+    //instanceUpdate.done = !instance.done;
+    instanceUpdate[0].done = (instance.done == 0) ? 1 : 0;
+    tb.updateTodo(instanceUpdate[0]);
+    initTodo();
+   // print(test[0]);
 
   }
 

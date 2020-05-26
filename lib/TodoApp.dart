@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutterapp2/Model/Todo.dart';
 import 'package:flutterapp2/TodoList.dart';
-
-//enum VisibilityFilter { all, pending, completed }
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TodoApp extends StatefulWidget {
   @override
@@ -12,7 +11,6 @@ class TodoApp extends StatefulWidget {
 
 class _TodoAppState extends State<TodoApp> {
   final todos =  TodoList();
-  var currentFIllter = VisibilityFilter.all;
   _showFormDialogAddTodo(BuildContext context,int id){
     TextEditingController _title = TextEditingController();
     TextEditingController _description = TextEditingController();
@@ -31,7 +29,7 @@ class _TodoAppState extends State<TodoApp> {
                 color: Colors.pinkAccent,
                 onPressed: (){
                   if(id == 0){
-                    Todo instance = Todo(id: 0,title: _title.text,description: _description.text);
+                    Todo instance = Todo(id: 0,title: _title.text,description: _description.text,done: 0);
                     todos.addTodo(instance);
                   }else{
                     Todo instance = todos.findTodo(id);
@@ -81,7 +79,6 @@ class _TodoAppState extends State<TodoApp> {
       icon: Icon(Icons.filter_list),
       onSelected: (VisibilityFilter result) {
         todos.changeFilter(result);
-        currentFIllter = result;
       },
       itemBuilder: (BuildContext context){
         return <PopupMenuEntry<VisibilityFilter>>[
@@ -117,21 +114,34 @@ class _TodoAppState extends State<TodoApp> {
             Positioned(
               top: 40,
               left: 20,
-              child: Text('Todo',style: TextStyle(
-                  color: Colors.white,
+              child: Text('Todo App',style: TextStyle(
+                  color: Colors.limeAccent,
                   fontSize: 40.0,
                   fontWeight: FontWeight.bold
               )),
             ),
-            Positioned(
-              top: 90,
-              right: 200,
-              child:Text('Current fillter:${currentFIllter}'),
-            ),
-            Positioned(
-              top: 70,
-              right: 20,
-              child:_showPopupMenuButton(),
+            Observer(
+              builder:(context) =>
+                  Positioned(
+                    width: 200.0,
+                    top: 90,
+                    child:Column(
+                      children: [
+                        Row(
+                          children: <Widget>[
+                            Text('Fillter todo:',style: TextStyle(fontSize: 16.0,fontWeight:FontWeight.bold,color: Colors.deepOrangeAccent ),),
+                            _showPopupMenuButton()
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text('Current fillter:',style: TextStyle(fontSize: 16.0,fontWeight:FontWeight.bold,color: Colors.deepOrangeAccent ),),
+                            Text('${todos.filterName}',style: TextStyle(fontWeight: FontWeight.bold),)
+                          ],
+                        ),
+                      ],
+                    ),
+              ),
             ),
             DraggableScrollableSheet(
                 maxChildSize: 0.85,
@@ -148,6 +158,7 @@ class _TodoAppState extends State<TodoApp> {
                             builder: (context)=>
                                 ListView.builder(
                                   itemBuilder: (context,index){
+                                    final check = (todos.visibleTodos[index].done ==1) ? true : false;
                                     return ListTile(
                                       leading: IconButton(icon: Icon(Icons.edit),onPressed: (){
                                         _showFormDialogAddTodo(context, todos.todos[index].id);
@@ -164,7 +175,7 @@ class _TodoAppState extends State<TodoApp> {
                                                 ),
                                                 Text('${todos.visibleTodos[index].title}',style: TextStyle(color: Colors.grey[900],fontWeight: FontWeight.bold),),
                                                 Checkbox(
-                                                  value: todos.visibleTodos[index].done,
+                                                  value:check,
                                                   onChanged: (bool value){
                                                     this.setState(() {
                                                       todos.changeStatus(todos.visibleTodos[index]);
@@ -176,7 +187,7 @@ class _TodoAppState extends State<TodoApp> {
                                           ),
 
                                           IconButton(icon: Icon(Icons.delete,color: Colors.redAccent,),onPressed: (){
-                                            todos.deleteTodo(index);
+                                            todos.deleteTodo(todos.visibleTodos[index]);
                                           })
                                         ],
                                       ),
@@ -203,10 +214,8 @@ class _TodoAppState extends State<TodoApp> {
                   );
                 }
             ),
-
           ],
         ),
-
       ) ,
     );
   }
