@@ -7,26 +7,32 @@ class TodoTable {
   static const TABLE_NAME = 'todos';
   static const CREATE_TABLE_QUERY = 'CREATE TABLE todos(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, title TEXT, description INTEGER, done INTEGER DEFAULT 0)';
   static const DROP_TABLE_QUERY = 'DROP TABLE IF EXISTS $TABLE_NAME';
+  //Singleton design pattern
+  TodoTable._internal();
+  static TodoTable instance;
+  static TodoTable getInstance(){
+    if(instance == null){
+      instance = TodoTable._internal();
+    }
+    return instance;
+  }
 
   Future<void> insertTodo(Todo todo) async {
-    final Database db = TodoDatabse.instance.database;
-    await db.insert(
+    await TodoDatabse.getInstance().database.insert(
       TABLE_NAME,
       todo.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace
     );
   }
   Future<void> deleteTodo(Todo todo) async {
-    final Database db = TodoDatabse.instance.database;
-    await db.delete(
+    await TodoDatabse.getInstance().database.delete(
         TABLE_NAME,
         where: 'id = ?',
         whereArgs: [todo.id]
     );
   }
   Future<List<Todo>> getAllTodo(int id) async {
-    final Database db = TodoDatabse.instance.database;
-    final List<Map<String,dynamic>> maps = await db.query(
+    final List<Map<String,dynamic>> maps = await TodoDatabse.getInstance().database.query(
         'todos',
          where: (id != 0) ? 'id = ?' : null,
          whereArgs: (id != 0) ? [id] : [],
@@ -39,8 +45,7 @@ class TodoTable {
     ));
   }
   Future<void> updateTodo(Todo todo) async {
-    final Database db = TodoDatabse.instance.database;
-    await db.update(
+    await TodoDatabse.getInstance().database.update(
         TABLE_NAME,
         todo.toMap(),
         where: 'id = ?',

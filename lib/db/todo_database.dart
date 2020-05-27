@@ -9,8 +9,15 @@ class TodoDatabse {
   static const DB_VERSION = 7;
   static Database  _database;
 
+  static TodoDatabse instance ;
   TodoDatabse._internal();
-  static final TodoDatabse instance = TodoDatabse._internal();
+  static TodoDatabse getInstance(){
+    if(instance == null){
+      instance = TodoDatabse._internal();
+    }
+    return instance;
+  }
+
 
   Database get database => _database;
 

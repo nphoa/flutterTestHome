@@ -62,9 +62,7 @@ abstract class TodoListBase with Store{
   void addTodo(Todo instance){
     if(instance.id == 0){
       instance.id = findIdFinal() + 1;
-      //todos.add(instance);
-      TodoTable tb = TodoTable();
-      tb.insertTodo(instance);
+      TodoTable.getInstance().insertTodo(instance);
       initTodo();
       return;
     }
@@ -76,17 +74,13 @@ abstract class TodoListBase with Store{
 
   @action
   void deleteTodo(Todo instance){
-    TodoTable tb = TodoTable();
-    tb.deleteTodo(instance);
+    TodoTable.getInstance().deleteTodo(instance);
     initTodo();
   }
 
   @action
   Future<void> initTodo() async{
-    //todos.add(Todo(id: 1, title:'Learning',description: 'Learning Mobx'));
-    //todos.add(Todo(id:2,title:'Learning',description: 'Learning Flutter'));
-    TodoTable tb = TodoTable();
-    todos = await tb.getAllTodo(0);
+    todos = await TodoTable.getInstance().getAllTodo(0);
     print(todos);
   }
   
@@ -104,12 +98,10 @@ abstract class TodoListBase with Store{
 
   @action
   Future<void> changeStatus(Todo instance) async{
-    //Todo instanceUpdate = findTodo(instance.id);
-    TodoTable tb = TodoTable();
-    var instanceUpdate =await tb.getAllTodo(instance.id);
+    var instanceUpdate =await TodoTable.getInstance().getAllTodo(instance.id);
     //instanceUpdate.done = !instance.done;
     instanceUpdate[0].done = (instance.done == 0) ? 1 : 0;
-    tb.updateTodo(instanceUpdate[0]);
+    TodoTable.getInstance().updateTodo(instanceUpdate[0]);
     initTodo();
    // print(test[0]);
 
