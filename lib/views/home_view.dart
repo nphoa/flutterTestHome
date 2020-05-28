@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutterapp2/constants.dart';
+import 'package:flutterapp2/services/news_services.dart';
 import 'package:flutterapp2/views/popular_tab_view.dart';
 import 'package:flutterapp2/views/recent_tab_view.dart';
 import 'package:flutterapp2/views/trending_tab_view.dart';
 class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    NewsServices.getInstance().getDataXMLByRssLink();
     return DefaultTabController(
       length: 3,
       initialIndex: 1,

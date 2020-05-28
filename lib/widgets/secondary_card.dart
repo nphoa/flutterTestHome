@@ -24,7 +24,7 @@ class SecondaryCard extends StatelessWidget {
                 image: DecorationImage(image: NetworkImage(news.image),fit: BoxFit.cover)
               ),
             ),
-          SizedBox(height: 12.0,),
+          SizedBox(width: 12.0,),
           Expanded(
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 5.0),
@@ -32,10 +32,27 @@ class SecondaryCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
+                    news.title,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                    style: kTitleCard,
+                  ),
+                  SizedBox(height:4.0 ,),
+                  Text(
                     news.subtitle,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 2,
                     style: kDetailContent,
+                  ),
+                  Spacer(),
+                  Row(
+                    children: <Widget>[
+                        Text(news.time,style: kDetailContent,),
+                        SizedBox(width: 10.0,),
+                        CircleAvatar(radius: 5.0,backgroundColor: kGrey1,),
+                        SizedBox(width: 10.0,),
+                        Text("${news.estimate} min read",style: kDetailContent,)
+                    ],
                   )
                 ],
               ),

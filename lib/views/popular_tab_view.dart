@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutterapp2/Model/News.dart';
 import 'package:flutterapp2/constants.dart';
+import 'package:flutterapp2/services/news_services.dart';
+import 'package:flutterapp2/views/read_news_view.dart';
 import 'package:flutterapp2/widgets/primary_card.dart';
 import 'package:flutterapp2/widgets/secondary_card.dart';
 class PopularTabView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    NewsServices.getInstance().getDataXMLByRssLink();
+    final popularList = NewsServices.getInstance().newsList;
     return Container(
       child: ListView(
         children:<Widget> [
@@ -21,7 +25,14 @@ class PopularTabView extends StatelessWidget {
                 itemBuilder: (context,index){
                     var news = popularList[index];
                     return InkWell(
-                      onTap: (){},
+                      onTap: (){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ReadNewsView(news: news,)
+                          )
+                        );
+                      },
                       child: Container(
                         margin: EdgeInsets.only(right: 12.0),
                         child: PrimaryCard(news: news),
@@ -46,7 +57,14 @@ class PopularTabView extends StatelessWidget {
               itemBuilder: (context,index){
                 var recent = recentList[index];
                 return InkWell(
-                  onTap: (){},
+                  onTap: (){
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ReadNewsView(news: recent,)
+                        )
+                    );
+                  },
                   child: Container(
                     width: double.infinity,
                     height: 135.0,
