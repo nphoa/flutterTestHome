@@ -24,14 +24,14 @@ class PrimaryCard extends StatelessWidget {
                 backgroundColor: kGrey1,
               ),
               SizedBox(width: 10.0,),
-              Text(news.category,style: kCategoryTitle,)
+              Text('news.category',style: kCategoryTitle,)
 
             ],
           ),
           SizedBox(height: 10.0,),
           Expanded(
             child: Hero(
-              tag: news.seen,
+              tag: 'news.seen',
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15.0),
@@ -51,7 +51,7 @@ class PrimaryCard extends StatelessWidget {
           Row(
             children: <Widget>[
               Text(
-                news.time,
+                'news.time',
                 style: kDetailContent,
               ),
               SizedBox(width: 10.0),

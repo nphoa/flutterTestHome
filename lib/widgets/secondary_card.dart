@@ -47,7 +47,7 @@ class SecondaryCard extends StatelessWidget {
                   Spacer(),
                   Row(
                     children: <Widget>[
-                        Text(news.time,style: kDetailContent,),
+                        Text('news.time',style: kDetailContent,),
                         SizedBox(width: 10.0,),
                         CircleAvatar(radius: 5.0,backgroundColor: kGrey1,),
                         SizedBox(width: 10.0,),

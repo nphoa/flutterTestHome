@@ -11,6 +11,8 @@ class PopularTabView extends StatelessWidget {
   Widget build(BuildContext context) {
     NewsServices.getInstance().getDataXMLByRssLink();
     final popularList = NewsServices.getInstance().newsList;
+    final popularListLimit = popularList.take(5).toList();
+    final recentListLimit = popularList.skip(5).toList();
     return Container(
       child: ListView(
         children:<Widget> [
@@ -19,11 +21,11 @@ class PopularTabView extends StatelessWidget {
             height: 300.9,
             padding: EdgeInsets.only(left: 18.0),
             child: ListView.builder(
-                itemCount: popularList.length,
+                itemCount: popularListLimit.length,
                 scrollDirection: Axis.horizontal,
                 shrinkWrap: true,
                 itemBuilder: (context,index){
-                    var news = popularList[index];
+                    var news = popularListLimit[index];
                     return InkWell(
                       onTap: (){
                         Navigator.push(
@@ -50,12 +52,12 @@ class PopularTabView extends StatelessWidget {
             ),
           ),
           ListView.builder(
-            itemCount: recentList.length,
+            itemCount: recentListLimit.length,
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
               physics: ScrollPhysics(),
               itemBuilder: (context,index){
-                var recent = recentList[index];
+                var recent = recentListLimit[index];
                 return InkWell(
                   onTap: (){
                     Navigator.push(
